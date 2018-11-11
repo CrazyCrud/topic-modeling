@@ -19,7 +19,16 @@ def prepare_text_for_lda(text):
 
 def tokenize(text):
     lda_tokens = []
+
+    """
+    Slice the text into separate tokens
+    """
     tokens = nlp(text)
+
+    """
+    For each token check if it is a whitespace or non-white space (word).
+    Then convert it to lowercase.
+    """
     for token in tokens:
         if token.orth_.isspace():
             continue
@@ -29,6 +38,11 @@ def tokenize(text):
 
 
 def get_lemma(word):
+    """
+    Create a lemmatized version of a word
+    :param word:
+    :return:
+    """
     lemma = wn.morphy(word)
     if lemma is None:
         return word
