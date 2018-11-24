@@ -1,19 +1,20 @@
 import spacy
+from spacy.lang.de.stop_words import STOP_WORDS
+
 import nltk
 from nltk.corpus import wordnet as wn
 
-nltk.download('wordnet')
-nltk.download('stopwords')
+# nltk.download('wordnet')
+# nltk.download('stopwords')
 
-# python -m spacy download en
-nlp = spacy.load('en')
+nlp = spacy.load('de')
 
 
 def prepare_text_for_lda(text):
     tokens = tokenize(text)
     tokens = [token for token in tokens if len(token) > 4]
     tokens = [token for token in tokens if token not in get_stopwords()]
-    tokens = [get_lemma(token) for token in tokens]
+    # tokens = [get_lemma(token) for token in tokens]
     return tokens
 
 
@@ -27,13 +28,14 @@ def tokenize(text):
 
     """
     For each token check if it is a whitespace or non-white space (word).
-    Then convert it to lowercase.
+    Then lemmatize it.
     """
     for token in tokens:
         if token.orth_.isspace():
             continue
         else:
-            lda_tokens.append(token.lower_)
+            token_lemmatized = token.lemma_
+            lda_tokens.append(token_lemmatized.lower())
     return lda_tokens
 
 
@@ -50,5 +52,9 @@ def get_lemma(word):
         return lemma
 
 
+def is_stopword(token):
+    return token.is_stop
+
+
 def get_stopwords():
-    return set(nltk.corpus.stopwords.words('english'))
+    return set(STOP_WORDS)

@@ -5,17 +5,19 @@ import glob
 from preprocessing import prepare_text_for_lda
 from visualize import visualize_lda
 
+should_model_be_saved = False
+
 
 def get_text_data():
     """
-    Save the text data and the txt. file names in lists
+    Import the text data and the txt. file names in lists
     """
     text_data = []
     text_labels = []
-    txt_files = glob.glob('corpus/*.txt')
+    txt_files = glob.glob('corpus/german/*.txt')
 
     for document in txt_files:
-        file = open(document, 'r')
+        file = open(document, 'r', encoding='utf-8')
         tokens = prepare_text_for_lda(file.read())
         text_data.append(tokens)
 
@@ -27,7 +29,8 @@ def get_text_data():
 
 def generate_lda_model(corpus, dictioanry, number_of_topics):
     lda_model = gensim.models.ldamodel.LdaModel(corpus, num_topics=number_of_topics, id2word=dictionary, passes=15)
-    lda_model.save('model{}.gensim'.format(NUM_TOPICS))
+    if should_model_be_saved is True:
+        lda_model.save('model{}.gensim'.format(NUM_TOPICS))
     return lda_model
 
 
@@ -79,7 +82,8 @@ if __name__ == "__main__":
     """
     Save the corpus so it can be loaded to save some time
     """
-    save_corpus(corpus)
+    if should_model_be_saved is True:
+        save_corpus(corpus)
 
     """
     Create the topic model
